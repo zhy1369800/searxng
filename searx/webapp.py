@@ -1361,7 +1361,7 @@ def run():
     """
 
     host: str = get_setting("server.bind_address")  # type: ignore
-    port: int = get_setting("server.port")  # type: ignore
+    port: int = 7860  # type: ignore
 
     if searx.sxng_debug:
         logger.debug("run local development server (DEBUG) on %s:%s", host, port)
