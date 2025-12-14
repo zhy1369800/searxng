@@ -25,7 +25,6 @@ env:
 
 jobs:
   build:
-    if: github.repository_owner == 'searxng' || github.event_name == 'workflow_dispatch'
     name: Build (${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -116,7 +115,7 @@ jobs:
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef  # v3.6.0
         with:
           registry: "ghcr.io"
-          username: "${{ github.repository_owner }}"
+          username: "${{ github.actor }}"
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Build
@@ -157,7 +156,7 @@ jobs:
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef  # v3.6.0
         with:
           registry: "ghcr.io"
-          username: "${{ github.repository_owner }}"
+          username: "${{ github.actor }}"
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test
@@ -167,7 +166,6 @@ jobs:
         run: make container.test
 
   release:
-    if: github.repository_owner == 'searxng' && github.ref_name == 'master'
     name: Release
     runs-on: ubuntu-24.04-arm
     needs:
@@ -187,15 +185,8 @@ jobs:
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef  # v3.6.0
         with:
           registry: "ghcr.io"
-          username: "${{ github.repository_owner }}"
+          username: "${{ github.actor }}"
           password: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef  # v3.6.0
-        with:
-          registry: "docker.io"
-          username: "${{ secrets.DOCKER_USER }}"
-          password: "${{ secrets.DOCKER_TOKEN }}"
 
       - name: Release
         env:
